@@ -1,0 +1,269 @@
+/* Geist and Geist Mono, the two families the design names. The fallback stacks
+ * below carry the layout when the network is not there, which is the normal case
+ * for an on-premise install.
+ *
+ * First line of the file on purpose: Tailwind inlines its own import in place,
+ * so anything after it stops being a leading @import and the browser drops it. */
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600&display=swap");
+
+@import "tailwindcss";
+
+/* nats-lens design tokens.
+ *
+ * Lifted verbatim from the Foundations artboard, which is drawn dark. Those
+ * values sit directly on :root and are the defaults; the light palette below
+ * redefines the same names under [data-theme="light"].
+ *
+ * Two rules from the design are enforced here rather than remembered:
+ *   - no italics anywhere; emphasis is weight, colour or size
+ *   - monospace means the server said it
+ */
+
+@theme {
+  /* Ground -- warm neutral, never blue */
+  --color-background: #0c0b0a;
+  --color-sidebar: #090908;
+  --color-card: #131211;
+  --color-muted: #1a1917;
+  --color-border: #272522;
+  --color-input: #272522;
+
+  /* Ground, second order. The design draws two weights of line: #272522 around a
+   * thing, #1c1a18 between things. Rows and section rules use the quieter one. */
+  --color-hairline: #1c1a18;
+  --color-row-hover: #161513;
+  /* The hairline inside a list, one step quieter than between sections. */
+  --color-hairline-soft: #161513;
+  /* Same value as the hairline, different job: the ground a ghost control
+   * lifts to on hover. Named for the role so it can move on its own. */
+  --color-control-hover: #1c1a18;
+  --color-track: #232120;
+  --color-border-strong: #3a3630;
+  --color-border-invalid: #6b3f3a;
+  --color-tab-active: #2a2825;
+
+  /* Tinted grounds. A signal colour at 4% over the background, used only behind
+   * a panel that is already saying something with its border. */
+  --color-surface-healthy: #101614;
+  --color-surface-degraded: #15120e;
+
+  /* Ink */
+  --color-foreground: #f6f4f0;
+  --color-card-foreground: #e8e4dd;
+  --color-ink-strong: #d6d1c9;
+  --color-muted-foreground: #918a80;
+  --color-ink-label: #837c72;
+  --color-ink-quiet: #9c958b;
+  --color-ink-subtle: #6e6960;
+  --color-ink-faint: #57534e;
+  --color-ink-dim: #4f4b45;
+  --color-ink-dimmest: #3f3b36;
+
+  /* Accent and signal -- one lightness, one chroma, four hues */
+  --color-primary: #a6b1ee;
+  --color-primary-hover: #c5cbf5;
+  --color-primary-foreground: #131019;
+  --color-ring: #a6b1ee;
+  --color-healthy: #74c39c;
+  --color-degraded: #cba97a;
+  --color-destructive: #e2938c;
+  --color-idle: #57534e;
+  --color-chart-1: #a6b1ee;
+  --color-chart-2: #74c39c;
+  --color-chart-3: #cba97a;
+  --color-chart-4: #d3a0dc;
+
+  /* Badge borders -- the dim companion to each signal hue */
+  --color-healthy-border: #2f4438;
+  --color-degraded-border: #463a28;
+  --color-destructive-border: #3a2d2b;
+  --color-primary-border: #31344f;
+  --color-idle-border: #2b2825;
+
+  /* 5px badges, 6px controls, 10px cards. The design draws all three side by
+   * side at the foot of Foundations so the difference is deliberate. */
+  --radius: 6px;
+  --radius-badge: 5px;
+  --radius-control: 6px;
+  --radius-switcher: 8px;
+  --radius-card: 10px;
+
+  --font-sans: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* The shell's fixed measures, so a screen can reason about the space it has. */
+  --spacing-sidebar: 240px;
+  --spacing-header: 56px;
+  --spacing-control: 36px;
+}
+
+/* The light palette.
+ *
+ * Not an inversion: the signal hues are *darkened* rather than flipped, because
+ * a colour legible on #0c0b0a is not legible on #faf9f7. Every value here was
+ * checked for contrast against both grounds -- foreground 16.5:1, muted
+ * foreground 5.6:1, and each signal at least 5.3:1, which mirrors the dark
+ * palette's own profile rather than merely clearing AA.
+ *
+ * `ink-subtle` sits at 3.6:1 on purpose, exactly as it does in the dark theme:
+ * it is for decoration and never for text that has to be read.
+ *
+ * Only the light case is written out. `system` is resolved to a concrete
+ * light/dark value by the theme script before first paint, so `data-theme` is
+ * always set and a `prefers-color-scheme` copy of all this would be dead weight.
+ */
+:root[data-theme="light"] {
+  --color-background: #faf9f7;
+  --color-sidebar: #f4f2ee;
+  --color-card: #ffffff;
+  --color-muted: #f0eeea;
+  --color-border: #e0dcd5;
+  --color-input: #e0dcd5;
+
+  --color-hairline: #eae7e1;
+  --color-row-hover: #f5f3ef;
+  --color-hairline-soft: #eeece7;
+
+  --color-control-hover: #f0eeea;
+  --color-track: #e6e3dc;
+  --color-border-strong: #c8c2b8;
+  --color-border-invalid: #c99a94;
+  --color-tab-active: #e6e3dc;
+
+  --color-surface-healthy: #f0f7f3;
+  --color-surface-degraded: #fbf5e9;
+
+  --color-foreground: #1c1a17;
+  --color-card-foreground: #2e2b26;
+  --color-ink-strong: #3c3831;
+  --color-muted-foreground: #6b645b;
+  --color-ink-label: #7a736a;
+  --color-ink-quiet: #6b645b;
+  --color-ink-subtle: #8a8279;
+  --color-ink-faint: #9b938a;
+  --color-ink-dim: #a8a098;
+  --color-ink-dimmest: #bab3aa;
+
+  --color-primary: #4a53a8;
+  --color-primary-hover: #3a4290;
+  --color-primary-foreground: #ffffff;
+  --color-ring: #4a53a8;
+  --color-healthy: #2f7250;
+  --color-degraded: #8a5f18;
+  --color-destructive: #b0413a;
+  --color-idle: #9b938a;
+  --color-chart-1: #4a53a8;
+  --color-chart-2: #2f7250;
+  --color-chart-3: #8a5f18;
+  --color-chart-4: #8b4a95;
+
+  --color-healthy-border: #b8d8c6;
+  --color-degraded-border: #e0cba0;
+  --color-destructive-border: #e5b5b0;
+  --color-primary-border: #c0c5e8;
+  --color-idle-border: #dbd6ce;
+}
+
+@layer base {
+  html { color-scheme: dark; }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Design rule 07: no italics anywhere. Enforced, not remembered. */
+  i, em, address, cite, dfn, var { font-style: normal; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  /* Foundations: 1px borders, no shadows. */
+  * { border-color: var(--color-border); }
+
+  ::selection {
+    background: var(--color-primary);
+    color: var(--color-background);
+  }
+
+  /* The design's scrollbar: a thumb the width of a border, inset so it reads as
+   * part of the ground rather than a control. */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 10px;
+    border: 3px solid var(--color-background);
+  }
+  ::-webkit-scrollbar-track { background: transparent; }
+}
+
+/* The type ramp, exactly as Foundations lists it. Eight roles, no more; a screen
+ * that needs a ninth size is a screen that has drifted. Colour is deliberately
+ * absent -- these set size, weight and tracking only, so a utility class can
+ * still tint them. */
+@layer components {
+  .t-page-title {
+    font-family: var(--font-sans);
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .t-section {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .t-card-title {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .t-label {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .t-body {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .t-caption {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  /* Mono means the server said it. */
+  .t-mono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .t-figure {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+}

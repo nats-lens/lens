@@ -1,0 +1,91 @@
+# Local development: three containers, each app in its own.
+#
+#   docker compose -f docker-compose.dev.yml up --build
+#     UI      http://localhost:5173
+#     API     http://localhost:8000/schema
+#     NATS    nats://localhost:4222   monitoring http://localhost:8222
+#
+#   docker compose -f docker-compose.dev.yml --profile demo run --rm seed
+#     fills the dev server with streams, KV, objects and live traffic
+#
+# The registry lives in SQLite at ./data/nats-lens.db, bind-mounted so the file is
+# on your host: it survives `down -v`, and you can open it with any sqlite client.
+
+name: nats-lens-dev
+
+services:
+  nats:
+    image: nats:2.14-alpine
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./docker/nats/nats.conf:/etc/nats/nats.conf:ro
+      - nats-data:/data
+    ports:
+      - "4222:4222"   # client
+      - "8222:8222"   # HTTP monitoring -- without this the Monitor screen has nothing to read
+      - "6222:6222"   # cluster
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8222/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.dev.Dockerfile
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////data/nats-lens.db
+      NATS_LENS_SECRET_KEY: ${NATS_LENS_SECRET_KEY:-ZGV2LW9ubHkta2V5LW5vdC1mb3ItcHJvZHVjdGlvbiE=}
+      NATS_LENS_DEBUG: "true"
+      NATS_LENS_CORS_ORIGINS: http://localhost:5173
+      NATS_LENS_PROTO_UPLOAD_DIR: /data/uploads/protos
+      NATS_LENS_PROTO_DIR: /protos
+      WEB_CONCURRENCY: "1"
+    volumes:
+      - ./backend:/app/backend
+      - ./alembic.ini:/app/alembic.ini:ro
+      - ./tools:/app/tools
+      # The SQLite registry, and uploaded proto definitions, on the host.
+      - ./data:/data
+      # Proto definitions you keep in the repo. Read-only: nats-lens scans this
+      # tree and never writes to it, and a file here can import its neighbours.
+      - ./protos:/protos:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      nats:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.dev.Dockerfile
+    environment:
+      VITE_API_PROXY: http://backend:8000
+    volumes:
+      - ./frontend:/app
+      # Anonymous volume: the host's node_modules are the wrong architecture.
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  seed:
+    profiles: ["demo"]
+    build:
+      context: .
+      dockerfile: docker/backend.dev.Dockerfile
+    command: ["python", "/app/tools/seed.py"]
+    environment:
+      NATS_URL: nats://app:app@nats:4222
+    volumes:
+      - ./tools:/app/tools
+      - ./backend:/app/backend
+    depends_on:
+      nats:
+        condition: service_healthy
+
+volumes:
+  nats-data:

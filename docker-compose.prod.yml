@@ -1,0 +1,45 @@
+# Production: ONE container serving the built React app and the Python backend.
+#
+#   NATS_LENS_SECRET_KEY=... docker compose -f docker-compose.prod.yml up --build
+#     http://localhost:8000
+#
+# No database container: the registry is SQLite at ./data/nats-lens.db, bind-mounted
+# from the host so it outlives the container and can be backed up by copying a file.
+#
+# No NATS container either, on purpose -- in production nats-lens connects to the
+# servers you already run. Add one with `--profile demo` only to try it out.
+
+name: nats-lens
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/prod.Dockerfile
+    image: nats-lens:latest
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////data/nats-lens.db
+      # Required. Stored NATS credentials are encrypted with it; the entrypoint
+      # refuses to start without one rather than silently orphaning them.
+      NATS_LENS_SECRET_KEY: ${NATS_LENS_SECRET_KEY:?set NATS_LENS_SECRET_KEY (see docker/entrypoint.sh)}
+      WEB_CONCURRENCY: "1"
+    volumes:
+      - ./data:/data
+    ports:
+      - "${NATS_LENS_PORT:-8000}:8000"
+    restart: unless-stopped
+
+  # Only for kicking the tyres. Production users bring their own broker.
+  nats:
+    profiles: ["demo"]
+    image: nats:2.14-alpine
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./docker/nats/nats.conf:/etc/nats/nats.conf:ro
+      - nats-data:/data
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+volumes:
+  nats-data:

@@ -1,0 +1,9 @@
+{
+  "server_id": "NDHJZ4YQGKZ7XW2VQ6R3TQKLJ7C4XPMB5HTQ2ZL6JYUDN3RG7VXKPQ2A",
+  "now": "2026-09-05T12:04:19.288411002Z",
+  "name": "prod-us-east",
+  "host": "0.0.0.0",
+  "port": 7222,
+  "outbound_gateways": {},
+  "inbound_gateways": {}
+}

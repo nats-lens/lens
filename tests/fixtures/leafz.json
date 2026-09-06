@@ -1,0 +1,21 @@
+{
+  "server_id": "NDHJZ4YQGKZ7XW2VQ6R3TQKLJ7C4XPMB5HTQ2ZL6JYUDN3RG7VXKPQ2A",
+  "now": "2026-09-05T12:04:19.288411002Z",
+  "leafnodes": 1,
+  "leafs": [
+    {
+      "name": "edge-ap-southeast",
+      "is_spoke": false,
+      "account": "APP",
+      "ip": "203.0.113.44",
+      "port": 7422,
+      "rtt": "186ms",
+      "in_msgs": 44120884,
+      "out_msgs": 118004412,
+      "in_bytes": 8804412000,
+      "out_bytes": 22011884120,
+      "subscriptions": 34,
+      "compression": "s2_auto"
+    }
+  ]
+}

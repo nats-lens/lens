@@ -1,0 +1,106 @@
+{
+  "server_id": "NDHJZ4YQGKZ7XW2VQ6R3TQKLJ7C4XPMB5HTQ2ZL6JYUDN3RG7VXKPQ2A",
+  "server_name": "nats-1",
+  "version": "2.11.4",
+  "proto": 1,
+  "git_commit": "5a3a2b1",
+  "go": "go1.24.2",
+  "host": "0.0.0.0",
+  "port": 4222,
+  "auth_required": true,
+  "max_connections": 65536,
+  "ping_interval": 120000000000,
+  "ping_max": 2,
+  "http_host": "0.0.0.0",
+  "http_port": 8222,
+  "http_base_path": "",
+  "https_port": 0,
+  "auth_timeout": 2,
+  "max_control_line": 4096,
+  "max_payload": 1048576,
+  "max_pending": 8388608,
+  "cluster": {
+    "name": "prod-us-east",
+    "addr": "0.0.0.0",
+    "cluster_port": 6222,
+    "auth_timeout": 2,
+    "urls": ["10.4.0.12:6222", "10.4.0.13:6222"],
+    "tls_timeout": 2,
+    "pool_size": 3
+  },
+  "gateway": {},
+  "leaf": {
+    "host": "0.0.0.0",
+    "port": 7422,
+    "auth_timeout": 2,
+    "tls_timeout": 2
+  },
+  "jetstream": {
+    "config": {
+      "max_memory": 1073741824,
+      "max_storage": 10737418240,
+      "store_dir": "/data/jetstream",
+      "sync_interval": 120000000000,
+      "compress_ok": true
+    },
+    "stats": {
+      "memory": 1288490188,
+      "storage": 339302416384,
+      "reserved_memory": 0,
+      "reserved_storage": 0,
+      "accounts": 2,
+      "ha_assets": 6,
+      "api": {
+        "total": 84200311,
+        "errors": 12
+      }
+    },
+    "meta": {
+      "name": "prod-us-east",
+      "leader": "nats-1",
+      "peer": "yrzKKRBu",
+      "replicas": [
+        {"name": "nats-2", "current": true, "active": 412000000, "peer": "S1Nunr6R"},
+        {"name": "nats-3", "current": true, "active": 388000000, "peer": "cnrtt3eg"}
+      ],
+      "cluster_size": 3
+    }
+  },
+  "tls_timeout": 2,
+  "write_deadline": 2000000000,
+  "start": "2026-08-15T07:52:11.104373841Z",
+  "now": "2026-09-05T12:04:19.288411002Z",
+  "uptime": "21d4h12m8s",
+  "mem": 3650722816,
+  "cores": 8,
+  "gomaxprocs": 8,
+  "memory_limit": -1,
+  "cpu": 18,
+  "connections": 128,
+  "total_connections": 4120338,
+  "routes": 2,
+  "remotes": 2,
+  "leafnodes": 1,
+  "in_msgs": 9800124553,
+  "out_msgs": 31200884120,
+  "in_bytes": 2100338844192,
+  "out_bytes": 6800112934418,
+  "slow_consumers": 2,
+  "subscriptions": 2140,
+  "http_req_stats": {
+    "/": 4,
+    "/connz": 9124,
+    "/healthz": 60418,
+    "/jsz": 9124,
+    "/routez": 812,
+    "/varz": 60418
+  },
+  "config_load_time": "2026-08-15T07:52:11.104373841Z",
+  "system_account": "SYS",
+  "slow_consumer_stats": {
+    "clients": 2,
+    "routes": 0,
+    "gateways": 0,
+    "leafs": 0
+  }
+}

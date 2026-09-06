@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Served from public/, so these paths hold in dev and in the built app. -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Matches --color-background, so the browser chrome and the standalone
+         splash do not flash white before the app paints. -->
+    <meta name="theme-color" content="#0c0b0a" />
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="description"
+      content="A NATS management GUI that says where every number came from."
+    />
+
+    <title>nats-lens</title>
+
+    <script>
+      // Before first paint, or the page flashes the other theme on every load.
+      (function () {
+        try {
+          var stored = localStorage.getItem("nats-lens.theme");
+          var setting = stored === "light" || stored === "dark" ? stored : "system";
+          var appearance =
+            setting === "system"
+              ? window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark"
+              : setting;
+          document.documentElement.setAttribute("data-theme", appearance);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", appearance === "light" ? "#faf9f7" : "#0c0b0a");
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

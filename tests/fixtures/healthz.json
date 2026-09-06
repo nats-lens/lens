@@ -1,0 +1,21 @@
+{
+  "ok": {
+    "status": "ok"
+  },
+  "js_not_enabled": {
+    "status": "unavailable",
+    "error": "JetStream is not enabled"
+  },
+  "consumer_not_current": {
+    "status": "error",
+    "errors": [
+      {
+        "type": "CONSUMER",
+        "account": "APP",
+        "stream": "TELEMETRY",
+        "consumer": "cold-archive",
+        "error": "consumer 'cold-archive' is not current"
+      }
+    ]
+  }
+}

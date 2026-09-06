@@ -1,0 +1,4 @@
+syntax = "proto3";
+package acme.billing.v1;
+import "common/money.proto";
+message Invoice { string number = 1; acme.common.Money total = 2; repeated string lines = 3; }

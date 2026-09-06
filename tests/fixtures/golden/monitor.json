@@ -1,0 +1,393 @@
+{
+  "overview": {
+    "url": "http://nats-1.prod.us-east:8222",
+    "reachable": true,
+    "status_code": 200,
+    "latency_ms": 41.0,
+    "poll_seconds": 5.0,
+    "varz": {
+      "server_id": "NDHJZ4YQGKZ7XW2VQ6R3TQKLJ7C4XPMB5HTQ2ZL6JYUDN3RG7VXKPQ2A",
+      "server_name": "nats-1",
+      "version": "2.11.4",
+      "uptime": "21d4h12m8s",
+      "start": "2026-08-15T07:52:11.104373841Z",
+      "connections": 128,
+      "total_connections": 4120338,
+      "routes": 2,
+      "remotes": 2,
+      "leafnodes": 1,
+      "subscriptions": 2140,
+      "slow_consumers": 2,
+      "in_msgs": 9800124553,
+      "out_msgs": 31200884120,
+      "in_bytes": 2100338844192,
+      "out_bytes": 6800112934418,
+      "mem": 3650722816,
+      "cpu": 18.0,
+      "cores": 8,
+      "max_payload": 1048576,
+      "jetstream_enabled": true
+    },
+    "rates": {
+      "in_msgs_per_sec": 1204.0,
+      "out_msgs_per_sec": 3981.0,
+      "in_bytes_per_sec": 4400000.0,
+      "out_bytes_per_sec": 14200000.0,
+      "window_ms": 5000
+    },
+    "jsz": {
+      "meta_leader": "nats-1",
+      "streams": 5,
+      "consumers": 93,
+      "messages": 78412003,
+      "bytes": 339302416384,
+      "memory": 1288490188,
+      "storage": 339302416384,
+      "api_total": 84200311,
+      "api_errors": 12,
+      "disabled": false
+    },
+    "varz_rows": [
+      {
+        "k": "Uptime",
+        "v": "21d 4h 12m 8s"
+      },
+      {
+        "k": "Connections",
+        "v": "128"
+      },
+      {
+        "k": "Total connections",
+        "v": "4.1M"
+      },
+      {
+        "k": "Slow consumers",
+        "v": "2"
+      },
+      {
+        "k": "Messages in",
+        "v": "9.8B"
+      },
+      {
+        "k": "Messages out",
+        "v": "31.2B"
+      },
+      {
+        "k": "Bytes in",
+        "v": "1.9 TB"
+      },
+      {
+        "k": "Memory",
+        "v": "3.4 GB"
+      },
+      {
+        "k": "Subscriptions",
+        "v": "2,140"
+      },
+      {
+        "k": "Routes",
+        "v": "2"
+      },
+      {
+        "k": "Leaf nodes",
+        "v": "1"
+      },
+      {
+        "k": "CPU",
+        "v": "18% of 8 cores"
+      }
+    ],
+    "error": null
+  },
+  "connections": {
+    "now": "2026-09-05T12:04:19.288411002Z",
+    "num_connections": 7,
+    "total": 128,
+    "offset": 0,
+    "limit": 50,
+    "connections": [
+      {
+        "cid": 9412,
+        "account": "APP",
+        "name": "analytics-tap",
+        "kind": "Client",
+        "ip": "10.4.2.18",
+        "port": 51402,
+        "subscriptions": 4,
+        "pending_bytes": 2516582,
+        "in_msgs": 44120,
+        "out_msgs": 9120334,
+        "rtt": "1.2ms",
+        "idle": "0s",
+        "uptime": "3d1h4m1s",
+        "lang": "go",
+        "version": "1.41.2",
+        "subjects": [
+          "events.>",
+          "metrics.*",
+          "orders.created",
+          "_INBOX.tap.>"
+        ]
+      },
+      {
+        "cid": 8871,
+        "account": "APP",
+        "name": "warehouse-etl",
+        "kind": "Client",
+        "ip": "10.4.2.44",
+        "port": 44120,
+        "subscriptions": 2,
+        "pending_bytes": 940032,
+        "in_msgs": 118,
+        "out_msgs": 41200338,
+        "rtt": "912\u00b5s",
+        "idle": "0s",
+        "uptime": "6d2h51m35s",
+        "lang": "python3",
+        "version": "2.15.0",
+        "subjects": [
+          "orders.>",
+          "_INBOX.etl.>"
+        ]
+      },
+      {
+        "cid": 9980,
+        "account": "APP",
+        "name": "order-picker-3",
+        "kind": "Client",
+        "ip": "10.4.1.22",
+        "port": 38810,
+        "subscriptions": 6,
+        "pending_bytes": 12288,
+        "in_msgs": 881204,
+        "out_msgs": 44120,
+        "rtt": "418\u00b5s",
+        "idle": "0s",
+        "uptime": "3h20m17s",
+        "lang": "go",
+        "version": "1.41.2",
+        "subjects": [
+          "orders.picked.*",
+          "orders.cancelled",
+          "_INBOX.picker3.>"
+        ]
+      },
+      {
+        "cid": 9979,
+        "account": "APP",
+        "name": "order-picker-2",
+        "kind": "Client",
+        "ip": "10.4.1.21",
+        "port": 38804,
+        "subscriptions": 6,
+        "pending_bytes": 8192,
+        "in_msgs": 880114,
+        "out_msgs": 44088,
+        "rtt": "402\u00b5s",
+        "idle": "0s",
+        "uptime": "3h20m18s",
+        "lang": "go",
+        "version": "1.41.2",
+        "subjects": [
+          "orders.picked.*",
+          "orders.cancelled",
+          "_INBOX.picker2.>"
+        ]
+      },
+      {
+        "cid": 1044,
+        "account": "SYS",
+        "name": "nats-lens",
+        "kind": "Client",
+        "ip": "10.4.9.2",
+        "port": 60122,
+        "subscriptions": 3,
+        "pending_bytes": 0,
+        "in_msgs": 44,
+        "out_msgs": 912004,
+        "rtt": "8.4ms",
+        "idle": "0s",
+        "uptime": "21d4h2m35s",
+        "lang": "python3",
+        "version": "2.15.0",
+        "subjects": [
+          "$SYS.ACCOUNT.*.CONNECT",
+          "$SYS.ACCOUNT.*.DISCONNECT",
+          "_INBOX.lens.>"
+        ]
+      },
+      {
+        "cid": 7712,
+        "account": "APP",
+        "name": "webhook-relay",
+        "kind": "Client",
+        "ip": "10.4.3.90",
+        "port": 41880,
+        "subscriptions": 1,
+        "pending_bytes": 0,
+        "in_msgs": 0,
+        "out_msgs": 118440,
+        "rtt": "2.1ms",
+        "idle": "3s",
+        "uptime": "7d21h42m11s",
+        "lang": "nats.js",
+        "version": "2.30.1",
+        "subjects": [
+          "events.webhook.>"
+        ]
+      },
+      {
+        "cid": 6620,
+        "account": "APP",
+        "name": "debug-tail",
+        "kind": "Client",
+        "ip": "10.4.8.11",
+        "port": 52200,
+        "subscriptions": 1,
+        "pending_bytes": 0,
+        "in_msgs": 0,
+        "out_msgs": 12,
+        "rtt": "718\u00b5s",
+        "idle": "2m0s",
+        "uptime": "11d2h0m6s",
+        "lang": "go",
+        "version": "1.41.2",
+        "subjects": [
+          "orders.>"
+        ]
+      }
+    ]
+  },
+  "routes": {
+    "now": "2026-09-05T12:04:19.288411002Z",
+    "num_routes": 2,
+    "num_leafnodes": 1,
+    "num_gateways": 0,
+    "routes": [
+      {
+        "rid": 4,
+        "remote_id": "nats-2",
+        "ip": "10.4.0.12",
+        "port": 6222,
+        "subscriptions": 2140,
+        "pending_size": 0,
+        "in_msgs": 8812004118,
+        "out_msgs": 9120884412,
+        "rtt": "604\u00b5s",
+        "kind": "route"
+      },
+      {
+        "rid": 5,
+        "remote_id": "nats-3",
+        "ip": "10.4.0.13",
+        "port": 6222,
+        "subscriptions": 2140,
+        "pending_size": 188416,
+        "in_msgs": 8804118220,
+        "out_msgs": 9118004412,
+        "rtt": "1.9ms",
+        "kind": "route"
+      },
+      {
+        "rid": 0,
+        "remote_id": "edge-ap-southeast",
+        "ip": "203.0.113.44",
+        "port": 7422,
+        "subscriptions": 34,
+        "pending_size": 0,
+        "in_msgs": 44120884,
+        "out_msgs": 118004412,
+        "rtt": "186ms",
+        "kind": "leaf"
+      }
+    ]
+  },
+  "health": [
+    {
+      "path": "/healthz",
+      "label": "server and JetStream both ready",
+      "status_code": 200,
+      "latency_ms": 41.0,
+      "ok": true,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "path": "/healthz?js-enabled-only=true",
+      "label": "JetStream is enabled in the config",
+      "status_code": 200,
+      "latency_ms": 41.0,
+      "ok": true,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "path": "/healthz?js-server-only=true",
+      "label": "this node is current, streams not checked",
+      "status_code": 200,
+      "latency_ms": 41.0,
+      "ok": true,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "path": "/healthz?stream=TELEMETRY",
+      "label": "all replicas of stream TELEMETRY",
+      "status_code": 200,
+      "latency_ms": 41.0,
+      "ok": true,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "path": "/healthz?stream=TELEMETRY&consumer=cold-archive",
+      "label": "consumer cold-archive on stream TELEMETRY",
+      "status_code": 503,
+      "latency_ms": 41.0,
+      "ok": false,
+      "status": "error",
+      "error": "consumer 'cold-archive' is not current"
+    }
+  ],
+  "prometheus": {
+    "exporter_image": "natsio/prometheus-nats-exporter:0.17.3",
+    "exporter_command": "prometheus-nats-exporter -varz -connz -routez -subz -gatewayz -leafz -jsz=all -port 7777 http://nats-1.prod.us-east:8222",
+    "scrape_url": "http://nats-1.prod.us-east:7777/metrics",
+    "surveyor_note": "nats-surveyor reads the same counters over the $SYS account rather than each server's monitoring port, which is the easier fit once there are more servers than there are ports you want to expose.",
+    "grafana_dashboard_url": "https://grafana.com/grafana/dashboards/2279-nats-server-dashboard/"
+  },
+  "unavailable": {
+    "overview": {
+      "url": "http://nats-1.prod.us-east:8222",
+      "reachable": false,
+      "status_code": null,
+      "latency_ms": null,
+      "poll_seconds": 5.0,
+      "varz": null,
+      "rates": null,
+      "jsz": null,
+      "varz_rows": [],
+      "error": "The monitoring URL is set but did not answer. Check that the port is open to nats-lens and that the server was started with monitoring enabled. ConnectError: [Errno 61] Connection refused."
+    },
+    "traffic": {
+      "value": null,
+      "source": "monitor",
+      "at": "2026-09-05T12:04:19Z",
+      "unavailable": {
+        "reason": "monitoring_unreachable",
+        "fix": "The monitoring URL is set but did not answer. Check that the port is open to nats-lens and that the server was started with monitoring enabled. ConnectError: [Errno 61] Connection refused.",
+        "doc": "https://docs.nats.io/running-a-nats-service/nats_admin/monitoring"
+      }
+    },
+    "not_configured": {
+      "value": null,
+      "source": "monitor",
+      "at": "2026-09-05T12:04:19Z",
+      "unavailable": {
+        "reason": "monitoring_not_configured",
+        "fix": "This server has no monitoring URL. Start nats-server with `-m 8222` (or set `http_port: 8222` in its config) and add the URL under the server's settings.",
+        "doc": "https://docs.nats.io/running-a-nats-service/nats_admin/monitoring"
+      }
+    }
+  }
+}

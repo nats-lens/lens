@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+node_modules/
+frontend/dist/
+
+# Generated from the app on demand; `frontend/src/lib/api.d.ts` is the
+# committed artifact the frontend actually compiles against.
+openapi.json
+
+# The SQLite registry and its WAL sidecars.
+data/
+.DS_Store
+.idea/

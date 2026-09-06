@@ -1,0 +1,197 @@
+# Build the production image and publish it to GHCR when a release is published.
+#
+# `published` rather than `created`: the usual flow is to draft a release, edit
+# the notes, then publish -- and `created` does not fire for a draft being
+# published, so half the releases would ship no image.
+name: release
+
+on:
+  release:
+    types: [published]
+  # Same pipeline on demand, for re-running a failed publish without cutting a
+  # new tag. `tag` is what the image is stamped and tagged with.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to build, e.g. v0.1.0"
+        required: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/nats-lens/lens
+
+jobs:
+  # A release that ships a broken image is worse than a late release, so this is
+  # the whole suite: unit plus the integration tests, which drive the real HTTP
+  # API against real NATS containers.
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - run: uv sync --all-groups --frozen
+
+      - name: Lint
+        run: uv run ruff check backend tests tools scripts
+
+      - name: Format
+        run: uv run ruff format --check backend tests tools scripts
+
+      - name: Types
+        run: uv run ty check
+
+      # Pulled here rather than inside the fixtures, so a slow pull shows up as a
+      # slow step instead of eating into a container's startup timeout. Read from
+      # the conftest rather than repeated, so the tag cannot drift from the suite.
+      - name: Pre-pull the NATS image
+        run: |
+          image=$(sed -n 's/^NATS_IMAGE = "\(.*\)"$/\1/p' tests/integration/conftest.py)
+          echo "Pulling $image"
+          docker pull "$image"
+
+      # `-m ""` overrides the `not integration` default in pyproject, which keeps
+      # a bare `pytest` fast on a laptop. GitHub sets CI=true, and the suite turns
+      # a missing Docker daemon into a failure rather than a skip when it is set --
+      # a silently skipped integration suite is a green build that tested nothing.
+      - name: Tests (unit + integration)
+        run: uv run pytest -m "" -ra
+
+  # One job per architecture on native runners. The alternative -- one job with
+  # QEMU -- emulates the whole SPA build and the alpine toolchain, which turns a
+  # three-minute build into a thirty-minute one.
+  build:
+    needs: check
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve the version being built
+        id: version
+        run: echo "value=${TAG#v}" >> "$GITHUB_OUTPUT"
+        env:
+          TAG: ${{ inputs.tag || github.event.release.tag_name }}
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Pushed by digest only. The tags are applied once, by the merge job, to
+      # the manifest list -- so `latest` never briefly points at one architecture.
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/prod.Dockerfile
+          platforms: ${{ matrix.platform }}
+          build-args: NATS_LENS_VERSION=${{ steps.version.outputs.value }}
+          provenance: false
+          cache-from: type=gha,scope=${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export the digest
+        run: |
+          mkdir -p /tmp/digests
+          touch "/tmp/digests/${DIGEST#sha256:}"
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: digest-${{ strategy.job-index }}
+          path: /tmp/digests/*
+          retention-days: 1
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # For the build provenance attestation below.
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: /tmp/digests
+          pattern: digest-*
+          merge-multiple: true
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # `latest` only for a real release. A prerelease publishes its version
+      # tags and nothing else, so `docker pull nats-lens/lens` never surprises
+      # anyone with a release candidate.
+      - name: Work out the tags
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.IMAGE }}
+          flavor: latest=${{ github.event.release.prerelease != true }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ inputs.tag || github.event.release.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag || github.event.release.tag_name }}
+            type=semver,pattern={{major}},value=${{ inputs.tag || github.event.release.tag_name }}
+
+      - name: Create the manifest list
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf "${IMAGE}@sha256:%s " *)
+
+      - name: Resolve the published digest
+        id: digest
+        run: |
+          echo "value=$(docker buildx imagetools inspect "${IMAGE}:${VERSION}" \
+            --format '{{json .Manifest}}' | jq -r .digest)" >> "$GITHUB_OUTPUT"
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+
+      - name: Attest the build provenance
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ steps.digest.outputs.value }}
+          push-to-registry: true
+
+      - name: Summary
+        run: |
+          {
+            echo "### Published"
+            echo
+            echo '```'
+            jq -r '.tags[]' <<< "$DOCKER_METADATA_OUTPUT_JSON" | sed 's/^/docker pull /'
+            echo '```'
+            echo
+            echo "Digest: \`${{ steps.digest.outputs.value }}\`"
+            echo "Platforms: \`linux/amd64\`, \`linux/arm64\`"
+          } >> "$GITHUB_STEP_SUMMARY"

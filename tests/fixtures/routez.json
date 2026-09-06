@@ -1,0 +1,51 @@
+{
+  "server_id": "NDHJZ4YQGKZ7XW2VQ6R3TQKLJ7C4XPMB5HTQ2ZL6JYUDN3RG7VXKPQ2A",
+  "now": "2026-09-05T12:04:19.288411002Z",
+  "num_routes": 2,
+  "routes": [
+    {
+      "rid": 4,
+      "remote_id": "NCXQ7BLPQ4A2ZKYJ6TDR3WVUHMS5FGXNC7ELQ2VB6YRJPTKD4M3WAHQZ",
+      "remote_name": "nats-2",
+      "did_solicit": true,
+      "is_configured": true,
+      "ip": "10.4.0.12",
+      "port": 6222,
+      "rtt": "604µs",
+      "start": "2026-08-15T07:52:14.118004221Z",
+      "last_activity": "2026-09-05T12:04:19.288411002Z",
+      "uptime": "21d4h12m5s",
+      "idle": "0s",
+      "pending_size": 0,
+      "in_msgs": 8812004118,
+      "out_msgs": 9120884412,
+      "in_bytes": 1880044120118,
+      "out_bytes": 2004118844120,
+      "subscriptions": 2140,
+      "account": "",
+      "compression": "s2_auto"
+    },
+    {
+      "rid": 5,
+      "remote_id": "NBRT9WKMD2X4LQVZ7YHJ3CPUS6FGAENR5TLQ8VB2YKJPMTXD4W3ZAHQC",
+      "remote_name": "nats-3",
+      "did_solicit": true,
+      "is_configured": true,
+      "ip": "10.4.0.13",
+      "port": 6222,
+      "rtt": "1.9ms",
+      "start": "2026-08-15T07:52:14.220118004Z",
+      "last_activity": "2026-09-05T12:04:19.288411002Z",
+      "uptime": "21d4h12m5s",
+      "idle": "0s",
+      "pending_size": 188416,
+      "in_msgs": 8804118220,
+      "out_msgs": 9118004412,
+      "in_bytes": 1878004120118,
+      "out_bytes": 2001188441200,
+      "subscriptions": 2140,
+      "account": "",
+      "compression": "s2_auto"
+    }
+  ]
+}

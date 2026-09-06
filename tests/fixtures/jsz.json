@@ -1,0 +1,78 @@
+{
+  "server_id": "NDHJZ4YQGKZ7XW2VQ6R3TQKLJ7C4XPMB5HTQ2ZL6JYUDN3RG7VXKPQ2A",
+  "now": "2026-09-05T12:04:19.288411002Z",
+  "disabled": false,
+  "config": {
+    "max_memory": 1073741824,
+    "max_storage": 10737418240,
+    "store_dir": "/data/jetstream",
+    "sync_interval": 120000000000,
+    "compress_ok": true
+  },
+  "memory": 1288490188,
+  "storage": 339302416384,
+  "reserved_memory": 0,
+  "reserved_storage": 0,
+  "accounts": 2,
+  "ha_assets": 6,
+  "api": {
+    "total": 84200311,
+    "errors": 12,
+    "inflight": 3
+  },
+  "streams": 5,
+  "consumers": 93,
+  "messages": 78412003,
+  "bytes": 339302416384,
+  "meta_cluster": {
+    "name": "prod-us-east",
+    "leader": "nats-1",
+    "peer": "yrzKKRBu",
+    "replicas": [
+      {"name": "nats-2", "current": true, "active": 412000000, "peer": "S1Nunr6R"},
+      {"name": "nats-3", "current": true, "active": 388000000, "peer": "cnrtt3eg"}
+    ],
+    "cluster_size": 3
+  },
+  "account_details": [
+    {
+      "name": "APP",
+      "id": "APP",
+      "memory": 1288490188,
+      "storage": 339302416384,
+      "reserved_memory": 0,
+      "reserved_storage": 0,
+      "accounts": 0,
+      "ha_assets": 6,
+      "api": {"total": 84200299, "errors": 12},
+      "stream_detail": [
+        {
+          "name": "ORDERS",
+          "cluster": {"name": "prod-us-east", "leader": "nats-1", "replicas": []},
+          "state": {
+            "messages": 41200118,
+            "bytes": 188004412000,
+            "first_seq": 1,
+            "last_seq": 41200118,
+            "consumer_count": 41,
+            "num_subjects": 12,
+            "num_deleted": 0
+          }
+        },
+        {
+          "name": "TELEMETRY",
+          "cluster": {"name": "prod-us-east", "leader": "nats-2", "replicas": []},
+          "state": {
+            "messages": 37211885,
+            "bytes": 151298004384,
+            "first_seq": 118004,
+            "last_seq": 37329888,
+            "consumer_count": 52,
+            "num_subjects": 8,
+            "num_deleted": 0
+          }
+        }
+      ]
+    }
+  ]
+}

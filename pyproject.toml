@@ -1,0 +1,78 @@
+[project]
+name = "nats-lens"
+version = "0.1.0"
+description = "A NATS management GUI"
+requires-python = ">=3.14"
+dependencies = [
+    "litestar>=2.24.0",
+    "msgspec>=0.21.1",
+    "granian[reload,uvloop]>=2.8.2",
+    "nats-py[nkeys]>=2.15.0",
+    "httpx2>=2.12.0",
+    "sqlalchemy[asyncio]>=2.0.52",
+    "aiosqlite>=0.22.1",
+    "alembic>=1.16.0",
+    "cryptography>=46.0.0",
+    "protobuf>=7.36.1",
+    "grpcio-tools>=1.83.1",
+]
+
+[project.scripts]
+nats-lens = "nats_lens.__main__:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.0",
+    "ty>=0.0.1a20",
+]
+test = [
+    "pytest>=9.0.0",
+    "pytest-cov>=7.0.0",
+    "anyio>=4.15.0",
+    "trio>=0.32.0",
+    "testcontainers>=4.13.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/nats_lens"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers -m 'not integration'"
+markers = [
+    "unit: pure logic, no external services",
+    "integration: needs a NATS server (testcontainers)",
+]
+anyio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["backend", "tests", "tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# `tags = [...]` and `path = "..."` are Litestar's own Controller idiom, not
+# accidental shared mutable state.
+"backend/nats_lens/domain/*/controller.py" = ["RUF012"]
+# Tests assert on private structure and re-import inside functions on purpose.
+"tests/*" = ["PLC0415"]
+# Alembic writes these; reformatting them only breaks on the next autogenerate.
+"backend/nats_lens/db/migrations/versions/*.py" = ["E501", "I001"]
+
+[tool.ty.environment]
+python-version = "3.14"
+root = ["backend"]
+
+[tool.ty.src]
+include = ["backend", "tests", "tools"]
+
+[tool.ty.rules]
+possibly-missing-attribute = "error"
+unresolved-import = "error"
